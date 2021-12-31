@@ -231,6 +231,7 @@ struct Player {
     life: i32,
     gems: Vec<Gem>,
     creatures: Vec<Creature>,
+    has_played_gem: bool,
 }
 
 impl Player {
@@ -265,6 +266,16 @@ impl Player {
         );
         let pos = self.creatures.partition_point(|c| creature_key(c) < creature_key(&creature));
         self.creatures.insert(pos, creature);
+    }
+
+    fn reset(&mut self) {
+        for gem in &mut self.gems {
+            gem.tapped = false;
+        }
+        for creature in &mut self.creatures {
+            creature.status = CreatureStatus::Ready;
+        }
+        self.has_played_gem = false;
     }
 }
 
@@ -418,6 +429,7 @@ impl Game {
                 life: 20,
                 gems: Vec::new(),
                 creatures: Vec::new(),
+                has_played_gem: false,
             });
         }
 
@@ -457,7 +469,8 @@ impl Game {
                 None => println!("Can't draw, no cards left"),
             }
 
-            let mut has_played_gem = false;
+            // Reset everything
+            self.us_mut().reset();
 
             println!("Enemy has {} cards", self.enemy().hand.len());
             println!("Enemy's gems:");
@@ -484,7 +497,7 @@ impl Game {
                 let card = self.us_mut().hand.remove(
                     (card_num - 1) as usize,
                 );
-                self.play_card(card, self.current_player, &mut has_played_gem)?;
+                self.play_card(card, self.current_player)?;
             }
 
             // Check victory condition
@@ -503,14 +516,14 @@ impl Game {
         }
     }
 
-    fn play_card(&mut self, card: Card, player: u32, has_played_gem: &mut bool) -> Result<(), Error> {
+    fn play_card(&mut self, card: Card, player: u32) -> Result<(), Error> {
         match card.face {
             Face::Two | Face::Three | Face::Four
             | Face::Five | Face::Six | Face::Seven => {
-                if *has_played_gem {
+                if self.players[player as usize].has_played_gem {
                     println!("Can only play one gem per turn");
                 } else {
-                    *has_played_gem = true;
+                    self.players[player as usize].has_played_gem = true;
                     self.players[player as usize].add_gem(card);
                 }
             }
