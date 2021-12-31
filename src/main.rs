@@ -202,6 +202,12 @@ impl std::fmt::Display for Card {
     }
 }
 
+#[derive(Debug)]
+struct Gem {
+    card: Card,
+    tapped: bool,
+}
+
 #[derive(Debug, Clone, Copy)]
 enum CreatureStatus {
     Ready,
@@ -223,7 +229,7 @@ struct Player {
     graveyard: Vec<Card>,
     hand: Vec<Card>,
     life: i32,
-    gems: Vec<Card>,
+    gems: Vec<Gem>,
     creatures: Vec<Creature>,
 }
 
@@ -240,14 +246,14 @@ impl Player {
     }
 
     /// Add gem, keeping them sorted
-    fn add_gem(&mut self, gem: Card) {
+    fn add_gem(&mut self, card: Card) {
         let gem_key = |c: &Card| (
             c.color(),
             c.face,
             c.suit,
         );
-        let pos = self.gems.partition_point(|c| gem_key(c) < gem_key(&gem));
-        self.gems.insert(pos, gem);
+        let pos = self.gems.partition_point(|c| gem_key(&c.card) < gem_key(&card));
+        self.gems.insert(pos, Gem { card, tapped: false });
     }
 
     /// Add creature, keeping them sorted
@@ -303,13 +309,13 @@ fn show_hand(hand: &[Card], player: u32) {
     }
 }
 
-fn show_gems(gems: &[Card]) {
+fn show_gems(gems: &[Gem]) {
     if gems.is_empty() {
         println!("    (no gems)");
     }
     let mut prev_color = None;
     for (i, gem) in gems.iter().enumerate() {
-        let color = gem.color();
+        let color = gem.card.color();
         if prev_color != Some(color) {
             prev_color = Some(color);
             println!("  {}:", color);
@@ -317,9 +323,10 @@ fn show_gems(gems: &[Card]) {
             prev_color = Some(color);
         }
         println!(
-            "{:>6} - {}",
+            "{:>6} - {}{}",
             i + 1,
-            gem,
+            gem.card,
+            if gem.tapped { " TAPPED" } else { "" },
         );
     }
 }
