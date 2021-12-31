@@ -147,6 +147,12 @@ enum Color {
     Black,
 }
 
+impl Color {
+    fn all() -> &'static [Color] {
+        &[Color::Red, Color::Black]
+    }
+}
+
 impl std::fmt::Display for Color {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match *self {
@@ -484,20 +490,58 @@ impl Game {
             println!("Your cards:");
             show_hand(&self.us().hand, self.current_player);
 
-            while self.us().hand.len() > 0 {
-                // TODO: Play gem or straight
-                let card_num = read_number(
-                    "Which card to play?",
-                    self.us().hand.len() as i32,
-                    true,
-                )?;
-                if card_num == 0 {
+            loop {
+                let untapped_gems = self.us().gems.iter().filter(|g| !g.tapped).count();
+                let untapped_jacks = self.us().creatures.iter().filter(|c| c.cards[0].face == Face::Jack).count();
+                let can_royal_sacrifice = Color::all().iter()
+                    // For each color
+                    .any(|&col| {
+                        // check that we have one of each
+                        let mut found = 0;
+                        for creature in &self.us().creatures {
+                            for card in &creature.cards {
+                                if card.color() == col {
+                                    found |= match card.face {
+                                        Face::Jack => 0x01,
+                                        Face::Queen => 0x02,
+                                        Face::King => 0x04,
+                                        _ => 0,
+                                    };
+                                }
+                            }
+                        }
+                        found == 0x07
+                    });
+
+                if self.us().hand.len() > 0 && read_yes_no("Play a card?", Some(false))? {
+                    // Play cards from our hand
+                    let card_num = read_number(
+                        "Which card to play?",
+                        self.us().hand.len() as i32,
+                        true,
+                    )?;
+                    if card_num == 0 {
+                        break;
+                    }
+                    let card = self.us_mut().hand.remove(
+                        (card_num - 1) as usize,
+                    );
+                    self.play_card(card, self.current_player)?;
+                } else if untapped_gems > 0 && read_yes_no("Play a straight?", Some(false))? {
+                    // Play a straight from our gems
+                    todo!();
+                } else if untapped_gems > 0 && read_yes_no("Sacrifice a gem?", Some(false))? {
+                    // Sacrifice one of our gems
+                    todo!();
+                } else if untapped_jacks >= 2 && read_yes_no("Stack jacks?", Some(false))? {
+                    // Stack untapped jacks from our creatures
+                    todo!();
+                } else if can_royal_sacrifice && read_yes_no("Royal sacrifice?", Some(false))? {
+                    // Royal sacrifice
+                    todo!();
+                } else {
                     break;
                 }
-                let card = self.us_mut().hand.remove(
-                    (card_num - 1) as usize,
-                );
-                self.play_card(card, self.current_player)?;
             }
 
             // Check victory condition
