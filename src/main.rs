@@ -204,18 +204,18 @@ impl std::fmt::Display for Card {
             Face::Five => "5",
             Face::Six => "6",
             Face::Seven => "7",
-            Face::Jack => "jack",
-            Face::Queen => "queen",
-            Face::King => "king",
-            Face::Ace => "ace",
+            Face::Jack => "J",
+            Face::Queen => "Q",
+            Face::King => "K",
+            Face::Ace => "A",
         };
         let suit = match self.suit {
-            Suit::Spades => "spades",
-            Suit::Hearts => "hearts",
-            Suit::Diamonds => "diamonds",
-            Suit::Clubs => "clubs",
+            Suit::Spades => "\u{2660}",
+            Suit::Hearts => "\u{2665}",
+            Suit::Diamonds => "\u{2666}",
+            Suit::Clubs => "\u{2663}",
         };
-        write!(f, "{} of {}", face, suit)
+        write!(f, "{}{}", face, suit)
     }
 }
 
