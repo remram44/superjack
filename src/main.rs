@@ -136,6 +136,18 @@ impl Face {
             Face::Ace,
         ]
     }
+
+    fn next(&self) -> Option<Face> {
+        match *self {
+            Face::Two => Some(Face::Three),
+            Face::Three => Some(Face::Four),
+            Face::Four => Some(Face::Five),
+            Face::Five => Some(Face::Six),
+            Face::Six => Some(Face::Seven),
+            Face::Seven => None,
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -400,6 +412,22 @@ enum PickedGems {
     Straight,
 }
 
+fn is_straight<I: IntoIterator<Item=Face>>(card_faces: I) -> bool {
+    // This relies on the fact that the hand is sorted by face
+    let mut is_straight = true;
+    let mut prev_face: Option<Face> = None;
+    for face in card_faces {
+        if let Some(prev_face) = prev_face {
+            if Some(face) != prev_face.next() {
+                is_straight = false;
+                break;
+            }
+        }
+        prev_face = Some(face);
+    }
+    is_straight
+}
+
 struct Game {
     current_player: u32,
     players: [Player; 2],
@@ -627,5 +655,41 @@ impl Game {
 
     fn pick_gems(&mut self, cost: u32, color: Color) -> Result<PickedGems, Error> {
         todo!()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{Face, is_straight};
+
+    #[test]
+    fn test_is_straight() {
+        assert_eq!(is_straight([Face::Two]), true);
+        assert_eq!(is_straight([Face::Two, Face::Three]), true);
+        assert_eq!(is_straight([Face::Two, Face::Two]), false);
+        assert_eq!(is_straight([Face::Two, Face::Four]), false);
+        assert_eq!(is_straight([Face::Three, Face::Four, Face::Five]), true);
+        assert_eq!(is_straight([Face::Three, Face::Four, Face::Six]), false);
+        assert_eq!(is_straight([Face::Three, Face::Four, Face::Four]), false);
+        assert_eq!(
+            is_straight([Face::Three, Face::Four, Face::Five, Face::Six]),
+            true,
+        );
+        assert_eq!(
+            is_straight([Face::Three, Face::Four, Face::Five, Face::Seven]),
+            false,
+        );
+        assert_eq!(
+            is_straight([Face::Two, Face::Four, Face::Five, Face::Six]),
+            false,
+        );
+        assert_eq!(
+            is_straight([Face::Three, Face::Four, Face::Four, Face::Five]),
+            false,
+        );
+        assert_eq!(
+            is_straight([Face::Three, Face::Four, Face::Four, Face::Six]),
+            false,
+        );
     }
 }
