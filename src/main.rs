@@ -73,11 +73,14 @@ fn read_yes_no(prompt: &str, default: Option<bool>) -> Result<bool, Error> {
     }
 }
 
-fn read_number(prompt: &str, max: i32, cancellable: bool) -> Result<i32, Error> {
-    let options = match cancellable {
-        true => format!("1-{} or 0", max),
-        false => format!("1-{}", max),
-    };
+fn read_number(prompt: &str, max: i32, cancellable: bool, empty: bool) -> Result<i32, Error> {
+    let mut options = format!("1-{}", max);
+    if cancellable {
+        options.push_str(" or 0");
+    }
+    if empty {
+        options.push_str(" or enter");
+    }
     let stdin = std::io::stdin();
     let mut stdout = std::io::stdout();
     let mut buffer = String::new();
@@ -89,8 +92,8 @@ fn read_number(prompt: &str, max: i32, cancellable: bool) -> Result<i32, Error> 
             Err(e) => return Err(Error::Io(e)),
             Ok(_) => {
                 let response = buffer.trim();
-                if response == "" && cancellable {
-                    return Ok(0);
+                if response == "" && empty {
+                    return Ok(-1);
                 }
                 match response.parse::<i32>() {
                     Ok(0) if cancellable => return Ok(0),
@@ -449,7 +452,7 @@ impl Game {
                 // Draw 5 cards
                 let mut hand: Vec<Card> = deck.drain(deck.len() - 5..).collect();
                 sort_hand(&mut hand);
-                println!("Player {} draws cards:", player);
+                println!("\nPlayer {} draws cards:", player + 1);
                 show_hand(&hand, player);
 
                 // Mulligan?
@@ -498,12 +501,26 @@ impl Game {
         &self.players[(1 - self.current_player) as usize]
     }
 
+    fn show_status(&self) {
+        println!();
+        println!("Your life: {}", self.us().life);
+        println!("Enemy life: {}", self.enemy().life);
+        println!("Enemy has {} cards", self.enemy().hand.len());
+        println!("Enemy's gems:");
+        show_gems(&self.enemy().gems);
+        println!("Enemy's creatures:");
+        show_creatures(&self.enemy().creatures, 1 - self.current_player);
+        println!("Your creatures:");
+        show_creatures(&self.us().creatures, self.current_player);
+        println!("Your gems:");
+        show_gems(&self.us().gems);
+        println!("Your cards:");
+        show_hand(&self.us().hand, self.current_player);
+    }
+
     fn main_loop(&mut self) -> Result<(), Error> {
         loop {
             println!("\nPlayer {}'s turn\n", self.current_player + 1);
-
-            println!("Your life: {}", self.us().life);
-            println!("Enemy life: {}", self.enemy().life);
 
             // Draw a card
             match self.us_mut().library.pop() {
@@ -517,19 +534,10 @@ impl Game {
             // Reset everything
             self.us_mut().reset();
 
-            println!("Enemy has {} cards", self.enemy().hand.len());
-            println!("Enemy's gems:");
-            show_gems(&self.enemy().gems);
-            println!("Enemy's creatures:");
-            show_creatures(&self.enemy().creatures, 1 - self.current_player);
-            println!("Your creatures:");
-            show_creatures(&self.us().creatures, self.current_player);
-            println!("Your gems:");
-            show_gems(&self.us().gems);
-            println!("Your cards:");
-            show_hand(&self.us().hand, self.current_player);
-
+            // Main phase
             loop {
+                self.show_status();
+
                 let untapped_gems = self.us().gems.iter().filter(|g| !g.tapped).count();
                 let untapped_jacks = self.us().creatures.iter().filter(|c| c.cards[0].face == Face::Jack).count();
                 let can_royal_sacrifice = Color::all().iter()
@@ -558,6 +566,7 @@ impl Game {
                         "Which card to play?",
                         self.us().hand.len() as i32,
                         true,
+                        false,
                     )?;
                     if card_num == 0 {
                         break;
@@ -565,7 +574,13 @@ impl Game {
                     let card = self.us_mut().hand.remove(
                         (card_num - 1) as usize,
                     );
-                    self.play_card(card, self.current_player)?;
+                    match self.play_card(card, self.current_player)? {
+                        None => {}
+                        Some(card) => {
+                            // Add card back into hand
+                            self.us_mut().add_card(card);
+                        }
+                    }
                 } else if untapped_gems > 0 && read_yes_no("Play a straight?", Some(false))? {
                     // Play a straight from our gems
                     todo!();
@@ -583,6 +598,10 @@ impl Game {
                 }
             }
 
+            // TODO: Attack, defense
+
+            // TODO: Second main phase
+
             // Check victory condition
             if self.players[0].life <= 0 && self.players[1].life <= 0 {
                 println!("It's a draw!");
@@ -595,19 +614,27 @@ impl Game {
                 return Ok(());
             }
 
+            // Next turn
             self.current_player = 1 - self.current_player;
         }
     }
 
-    fn play_card(&mut self, card: Card, player: u32) -> Result<(), Error> {
+    /// Try to play a card, asking relevant questions.
+    ///
+    /// Returns Ok(None) if the card was played, or Ok(Some(card)) if the card
+    /// couldn't be played and should be returned to the player's hand.
+    fn play_card(&mut self, card: Card, player: u32) -> Result<Option<Card>, Error> {
         match card.face {
             Face::Two | Face::Three | Face::Four
             | Face::Five | Face::Six | Face::Seven => {
                 if self.players[player as usize].has_played_gem {
-                    println!("Can only play one gem per turn");
+                    println!("You can only play one gem per turn");
+                    Ok(Some(card))
                 } else {
+                    println!("Adding gem {}", card);
                     self.players[player as usize].has_played_gem = true;
                     self.players[player as usize].add_gem(card);
+                    Ok(None)
                 }
             }
             Face::Jack | Face::Queen | Face::King => {
@@ -618,11 +645,15 @@ impl Game {
                     Face::Ace => 3,
                     _ => unreachable!(),
                 };
-                let royal_charge = match self.pick_gems(cost, card.color())? {
-                    PickedGems::No => return Ok(()),
+                let royal_charge = match self.pick_gems(cost, player, card.color())? {
+                    PickedGems::No => return Ok(Some(card)),
                     PickedGems::Yes => false,
                     PickedGems::Straight => true,
                 };
+                println!("Adding creature {} (untrained)", card);
+                if royal_charge {
+                    println!("Creature has Royal Charge!");
+                }
                 let creature = Creature {
                     cards: vec![card],
                     royal_charge,
@@ -630,16 +661,21 @@ impl Game {
                     equipment: Vec::new(),
                 };
                 self.players[player as usize].add_creature(creature);
+                Ok(None)
             }
             Face::Ace => {
                 if read_yes_no("Play as spell? [y/n] ", None)? {
                     todo!();
                 } else {
-                    let royal_charge = match self.pick_gems(3, card.color())? {
-                        PickedGems::No => return Ok(()),
+                    let royal_charge = match self.pick_gems(3, player, card.color())? {
+                        PickedGems::No => return Ok(Some(card)),
                         PickedGems::Yes => false,
                         PickedGems::Straight => true,
                     };
+                    println!("Adding creature {} (trained)", card);
+                    if royal_charge {
+                        println!("Creature has Royal Charge!");
+                    }
                     let creature = Creature {
                         cards: vec![card],
                         royal_charge,
@@ -647,14 +683,103 @@ impl Game {
                         equipment: Vec::new(),
                     };
                     self.players[player as usize].add_creature(creature);
+                    Ok(None)
                 }
             }
         }
-        Ok(())
     }
 
-    fn pick_gems(&mut self, cost: u32, color: Color) -> Result<PickedGems, Error> {
-        todo!()
+    fn pick_gems(&mut self, cost: u32, player: u32, color: Color) -> Result<PickedGems, Error> {
+        // TODO: Gem sacrifice 4 or 5 to "mine" (+3 energy)
+
+        // Create vector of same size as gems
+        // For gems we can't select: None
+        // For gems we can select Some(true) if selected, Some(false) if unselected
+        let mut choices = Vec::new();
+        let mut num_choices = 0;
+        for gem in &self.players[player as usize].gems {
+            if !gem.tapped && gem.card.color() == color {
+                choices.push(Some(false));
+                num_choices += 1;
+            } else {
+                choices.push(None);
+            }
+        }
+        let mut num_selected = 0;
+
+        // Loop until gems are selected and confirmed
+        loop {
+            for (i, (gem, selected)) in
+                self.players[player as usize].gems.iter().zip(&choices)
+                    .filter_map(|(gem, &choice)|
+                        match choice { Some(c) => Some((gem, c)), None => None }
+                    )
+                    .enumerate()
+            {
+                println!(
+                    "{:>6} - {} {}",
+                    i + 1,
+                    if selected { "[x]" } else { "[ ]" },
+                    gem.card,
+                );
+            }
+            match read_number(
+                &format!("Pick gems ({}/{})", num_selected, cost),
+                num_choices,
+                true,
+                num_selected == cost,
+            )? {
+                // Cancelled
+                0 => return Ok(PickedGems::No),
+                // Confirmed
+                -1 => {
+                    // Tap selected gems
+                    for (gem, &selected) in self.players[player as usize].gems.iter_mut().zip(&choices) {
+                        if let Some(true) = selected {
+                            gem.tapped = true;
+                        }
+                    }
+
+                    // Check for straights
+                    // This relies on the fact that the hand is sorted by face
+                    let is_straight = is_straight(
+                        self.players[player as usize].gems.iter().zip(&choices)
+                            .filter_map(|(gem, &selected)|
+                                if let Some(true) = selected {
+                                    Some(gem.card.face)
+                                } else {
+                                    None
+                                }
+                            )
+                    );
+
+                    if is_straight {
+                        return Ok(PickedGems::Straight);
+                    } else {
+                        return Ok(PickedGems::Yes);
+                    }
+                }
+                // Toggle a gem
+                i => {
+                    match choices.iter_mut()
+                        .filter_map(|s| s.as_mut())
+                        .nth((i - 1) as usize)
+                    {
+                        Some(selected) => match *selected {
+                            true => {
+                                *selected = false;
+                                num_selected -= 1;
+                            }
+                            false => {
+                                *selected = true;
+                                num_selected += 1;
+                            }
+                        }
+                        None => panic!(),
+                    }
+                }
+            }
+        }
     }
 }
 
