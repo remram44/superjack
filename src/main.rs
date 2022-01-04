@@ -1,4 +1,5 @@
 use rand::{Rng, thread_rng};
+use std::io::Write;
 
 #[derive(Debug)]
 enum Error {
@@ -24,6 +25,12 @@ impl std::error::Error for Error {
     }
 }
 
+impl From<std::io::Error> for Error {
+    fn from(e: std::io::Error) -> Error {
+        Error::Io(e)
+    }
+}
+
 fn main() {
     match Game::play() {
         Ok(()) => {}
@@ -41,9 +48,11 @@ fn read_yes_no(prompt: &str, default: Option<bool>) -> Result<bool, Error> {
         Some(false) => "y/N",
     };
     let stdin = std::io::stdin();
+    let mut stdout = std::io::stdout();
     let mut buffer = String::new();
     loop {
-        print!("{} [{}] ", prompt, options);
+        write!(stdout, "{} [{}] ", prompt, options)?;
+        stdout.flush()?;
         match stdin.read_line(&mut buffer) {
             Ok(0) => return Err(Error::Exit),
             Err(e) => return Err(Error::Io(e)),
@@ -70,9 +79,11 @@ fn read_number(prompt: &str, max: i32, cancellable: bool) -> Result<i32, Error> 
         false => format!("1-{}", max),
     };
     let stdin = std::io::stdin();
+    let mut stdout = std::io::stdout();
     let mut buffer = String::new();
     loop {
-        print!("{} [{}] ", prompt, options);
+        write!(stdout, "{} [{}] ", prompt, options)?;
+        stdout.flush()?;
         match stdin.read_line(&mut buffer) {
             Ok(0) => return Err(Error::Exit),
             Err(e) => return Err(Error::Io(e)),
