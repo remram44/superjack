@@ -42,4 +42,6 @@ This applies when a player can perform instant actions, whether it is their turn
 
 For example, if it is player 1's turn and they just ended their `SecondMain` phase, it is player 2's turn to take `instant actions`. If however they caused the `instant actions` state-machine to go to the `respond` state, for example by doing a `gem sacrifice 2 or 3` (fireball), player 1 has `priority` to take instant actions (or `pass` priority back for player 2 to `act`).
 
+Within the `Instant` machine itself, it is possible for the other player to play aces to counter an ace, or to transition via the `response` port to their own `Instant` state (which causes the ace to take effect).
+
 [![instant actions: details](instant.png)](instant.uml)

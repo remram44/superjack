@@ -6,10 +6,15 @@ state Instant {
   state "priority" as priorityO <<exitpoint>>
   state response <<exitpoint>>
   priority --> AceCreature : ace (creature)
+  priority --> AceSpell : ace (spell)
   AceCreature --> CounteredAceCreature : OPPONENT ace (counter)
   AceCreature --> response
   CounteredAceCreature --> AceCreature : ace (counter)
   CounteredAceCreature --> priority
+  AceSpell --> CounteredAceSpell : OPPONENT ace (counter)
+  AceSpell --> response
+  CounteredAceSpell --> AceSpell : ace (counter)
+  CounteredAceSpell --> priority
   priority --> priority : gem sacrifice 4-7\nstraight\nequip\nstack\nroyal sacrifice
   priority --> response : gem sacrifice 2 or 3
 }
