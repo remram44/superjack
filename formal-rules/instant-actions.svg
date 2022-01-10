@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   contentScriptType="application/ecmascript"
+   contentStyleType="text/css"
+   height="393"
+   preserveAspectRatio="none"
+   version="1.1"
+   viewBox="0 0 368 393"
+   width="368"
+   zoomAndPan="magnify"
+   id="svg104"
+   sodipodi:docname="instant-actions.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <metadata
+     id="metadata108">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="985"
+     id="namedview106"
+     showgrid="false"
+     inkscape:zoom="2.4020356"
+     inkscape:cx="182.66285"
+     inkscape:cy="213.16831"
+     inkscape:window-x="0"
+     inkscape:window-y="30"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g102"
+     inkscape:snap-global="true" />
+  <defs
+     id="defs11">
+    <filter
+       height="3"
+       id="f1lyftaqt8ve3l"
+       width="3"
+       x="-1"
+       y="-1">
+      <feGaussianBlur
+         result="blurOut"
+         stdDeviation="2.0"
+         id="feGaussianBlur2" />
+      <feColorMatrix
+         in="blurOut"
+         result="blurOut2"
+         type="matrix"
+         values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"
+         id="feColorMatrix4" />
+      <feOffset
+         dx="4.0"
+         dy="4.0"
+         in="blurOut2"
+         result="blurOut3"
+         id="feOffset6" />
+      <feBlend
+         in="SourceGraphic"
+         in2="blurOut3"
+         mode="normal"
+         id="feBlend8" />
+    </filter>
+  </defs>
+  <g
+     id="g102">
+    <!--MD5=[be9fd0b3c880ca53e5e948a83a3a82ab]
+cluster InstantAction-->
+    <rect
+       height="357.07999"
+       rx="10.002917"
+       ry="12.5"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.34183645;filter:url(#f1lyftaqt8ve3l)"
+       width="285"
+       x="7"
+       y="7"
+       id="rect13"
+       transform="matrix(1.2496355,0,0,1,-6.237716,0)" />
+    <rect
+       height="322.01208"
+       rx="12.500001"
+       ry="12.5"
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:1"
+       width="349.65076"
+       x="5.2899499"
+       y="39.067902"
+       id="rect15" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="2.8368635"
+       x2="358.19385"
+       y1="36.067902"
+       y2="36.067902"
+       id="line17" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="99"
+       x="100"
+       y="26.9659"
+       id="text19"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">instant actions</text>
+    <!--MD5=[1cc0a1693ca47ef776d0226d58f0ac56]
+cluster act-->
+    <rect
+       height="55.680992"
+       rx="8.1976461"
+       ry="12.5"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.214733;filter:url(#f1lyftaqt8ve3l)"
+       width="83"
+       x="27"
+       y="152.72"
+       id="rect21"
+       transform="matrix(1.5248279,0,0,1,-14.236581,0)" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="27"
+       x2="152.68483"
+       y1="181.7879"
+       y2="181.7879"
+       id="line27" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="20"
+       x="58.5"
+       y="172.6859"
+       id="text29"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">act</text>
+    <text
+       font-size="12"
+       lengthAdjust="spacing"
+       textLength="39"
+       x="32"
+       y="197.116"
+       id="text31"
+       style="font-size:12px;font-family:sans-serif;fill:#000000">Instant</text>
+    <!--MD5=[c378082a25a24e215a988a681733d302]
+cluster respond-->
+    <rect
+       height="55.507969"
+       rx="12.5"
+       ry="12.5"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.5;filter:url(#f1lyftaqt8ve3l)"
+       width="142"
+       x="182.65941"
+       y="152.72"
+       id="rect33" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="182.65941"
+       x2="324.65939"
+       y1="181.7879"
+       y2="181.7879"
+       id="line39" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="56"
+       x="169"
+       y="72.965897"
+       id="text41"
+       transform="translate(56.659406,99.720001)"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">respond</text>
+    <text
+       font-size="12"
+       lengthAdjust="spacing"
+       textLength="106"
+       x="131"
+       y="97.396004"
+       id="text43"
+       transform="translate(56.659406,99.720001)"
+       style="font-size:12px;font-family:sans-serif;fill:#000000">OPPONENT Instant</text>
+    <circle
+       cx="82"
+       cy="120.36"
+       style="fill:#000000;stroke:none;stroke-width:1;filter:url(#f1lyftaqt8ve3l)"
+       id="ellipse45"
+       r="10" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="31"
+       x="76.5"
+       y="385.0459"
+       id="text47"
+       transform="translate(-38.269162)"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">pass</text>
+    <circle
+       cx="54.908352"
+       cy="364.07999"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.5"
+       id="ellipse49"
+       r="6" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="59.297451"
+       x2="51.519253"
+       y1="368.46909"
+       y2="360.69089"
+       id="line51" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="59.297451"
+       x2="51.519253"
+       y1="360.69089"
+       y2="368.46909"
+       id="line53" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="49"
+       x="67.5"
+       y="313.0459"
+       id="text55"
+       transform="translate(-39.211462,-84.095339)"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">priority</text>
+    <circle
+       cx="54.664486"
+       cy="208.81728"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.5"
+       id="ellipse57"
+       r="6" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="59.053593"
+       x2="51.275387"
+       y1="213.20638"
+       y2="205.42818"
+       id="line59" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="59.053593"
+       x2="51.275387"
+       y1="205.42818"
+       y2="213.20638"
+       id="line61" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="62"
+       x="14"
+       y="313.0459"
+       id="text63"
+       transform="translate(85.024775,-84.511653)"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">response</text>
+    <circle
+       cx="128.06514"
+       cy="208.81728"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.5"
+       id="ellipse65"
+       r="6" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="132.45424"
+       x2="124.67604"
+       y1="213.20638"
+       y2="205.42818"
+       id="line67" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="132.45424"
+       x2="124.67604"
+       y1="205.42818"
+       y2="213.20638"
+       id="line69" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="49"
+       x="119.5"
+       y="241.0459"
+       id="text71"
+       transform="translate(69.98144,-12.684659)"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">priority</text>
+    <circle
+       cx="212.31619"
+       cy="207.81165"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.5"
+       id="ellipse73"
+       r="6" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="216.70529"
+       x2="208.92709"
+       y1="212.20074"
+       y2="204.42255"
+       id="line75" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="216.70529"
+       x2="208.92709"
+       y1="204.42255"
+       y2="212.20074"
+       id="line77" />
+    <text
+       font-size="14"
+       lengthAdjust="spacing"
+       textLength="62"
+       x="160"
+       y="241.0459"
+       id="text79"
+       transform="translate(94.127626,-13.100969)"
+       style="font-size:14px;font-family:sans-serif;fill:#000000">response</text>
+    <circle
+       cx="290.12338"
+       cy="207.81165"
+       style="fill:#fefece;stroke:#a80036;stroke-width:1.5"
+       id="ellipse81"
+       r="6" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="294.51248"
+       x2="286.73428"
+       y1="212.20074"
+       y2="204.42255"
+       id="line83" />
+    <line
+       style="stroke:#a80036;stroke-width:1.5"
+       x1="294.51248"
+       x2="286.73428"
+       y1="204.42255"
+       y2="212.20074"
+       id="line85" />
+    <!--MD5=[e5efa80ce47bcb6009a45320148204ca]
+link *start*InstantAction to act-->
+    <path
+       d="m 82,130.38 c 0,2.9763 0,6.563 0,10.5649 0,2.0009 0,4.1057 0,6.2898 0,1.092 0,2.2039 0,3.3326 0,0.5644 0,1.1329 0,1.7053 0,0.1431 0,0.2864 0,0.43"
+       id="*start*InstantAction-to-act"
+       style="fill:none;stroke:#a80036;stroke-width:1"
+       inkscape:connector-curvature="0" />
+    <polygon
+       points="82,147.7026 78,143.7026 82,152.7026 86,143.7026 "
+       style="fill:#a80036;stroke:#a80036;stroke-width:1"
+       id="polygon88" />
+    <!--MD5=[c6e80d900e5d53c3f101804e6e2382f0]
+link act_responseO to respond-->
+    <path
+       d="m 133.33737,212.32324 c 14.27728,5.96308 42.84633,-0.137 51.01293,-9.5572"
+       id="act_responseO-to-respond"
+       style="fill:none;stroke:#a80036;stroke-width:1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <polygon
+       points="237.8478,225.2922 240.3996,230.3408 239.4083,220.542 232.7992,227.844 "
+       style="fill:#a80036;stroke:#a80036;stroke-width:1"
+       id="polygon91"
+       transform="rotate(26.744356,249.42954,94.594103)"
+       inkscape:transform-center-x="5.160098"
+       inkscape:transform-center-y="5.2671848" />
+    <!--MD5=[f4ae873fb9e8545572ec5579d626efd8]
+reverse link act to respond_responseO-->
+    <path
+       d="M 75.452113,208.47397 C 120.41507,322.97241 264.03868,323.63605 291.14857,213.65562"
+       id="act-backto-respond_responseO"
+       style="fill:none;stroke:#a80036;stroke-width:1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <polygon
+       points="118.8314,152.0401 113.2031,152.6079 112.6353,146.9796 110.0402,156.4804 "
+       style="fill:#a80036;stroke:#a80036;stroke-width:1"
+       id="polygon94"
+       transform="rotate(116.76129,76.740719,171.82976)"
+       inkscape:transform-center-x="-4.0479118"
+       inkscape:transform-center-y="5.4865426" />
+    <!--MD5=[33688ffeafa25af8ce61a658eb843d69]
+link respond_priorityO to act-->
+    <path
+       d="m 208.92709,212.20074 c -26.5287,69.19333 -101.06342,64.83128 -123.943229,-3.67345"
+       id="respond_priorityO-to-act"
+       style="fill:none;stroke:#a80036;stroke-width:1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <polygon
+       points="119.1188,224.08 115.1188,220.08 119.1188,216.08 110.1188,220.08 "
+       style="fill:#a80036;stroke:#a80036;stroke-width:1"
+       id="polygon97"
+       transform="rotate(63.829309,106.3422,193.99279)"
+       inkscape:transform-center-x="-4.3863738"
+       inkscape:transform-center-y="5.9649568" />
+    <!--MD5=[e4c15bc3d403c34da84c231151cda598]
+link act_priorityO to passO-->
+    <path
+       d="m 54.90835,214.63912 c 0,28.7026 0,98.68106 0,137.67088"
+       id="act_priorityO-to-passO"
+       style="fill:none;stroke:#a80036;stroke-width:1"
+       inkscape:connector-curvature="0" />
+    <polygon
+       points="96,348.71 92,352.71 88,348.71 92,357.71 "
+       style="fill:#a80036;stroke:#a80036;stroke-width:1"
+       id="polygon100"
+       transform="translate(-37.091642)" />
+    <!--MD5=[6bdedacf3709a46d014d8b83950e8ab8]
+@startuml
+
+state "instant actions" as InstantAction {
+  [*] - -> act
+  state act {
+    state "priority" as act_priorityO <<exitpoint>>
+    state "response" as act_responseO <<exitpoint>>
+  }
+  act : Instant
+  state respond {
+    state "priority" as respond_priorityO <<exitpoint>>
+    state "response" as respond_responseO <<exitpoint>>
+  }
+  act_responseO - -> respond
+  respond_responseO -left-> act
+  respond_priorityO - -> act
+  respond: OPPONENT Instant
+  state "pass" as passO <<exitpoint>>
+  act_priorityO - -> passO
+}
+
+@enduml
+
+PlantUML version 1.2021.16(Wed Dec 08 12:25:22 EST 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
