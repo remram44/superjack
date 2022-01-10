@@ -1,0 +1,28 @@
+@startuml
+
+state PickCards <<fork>>
+[*] --> PickCards
+PickCards --> Player1Pick
+state Player1Pick as "Player 1 pick cards" {
+  state "not Mulligan'd" as Player1FirstPick
+  state "ready" as Player1Picked
+  [*] --> Player1FirstPick : / pick 5 random cards
+  Player1FirstPick --> Player1Picked : Mulligan / pick 5 random cards
+  Player1FirstPick --> Player1Picked : Accept
+}
+PickCards --> Player2Pick
+state Player2Pick as "Player 2 pick cards" {
+  state "not Mulligan'd" as Player2FirstPick
+  state "ready" as Player2Picked
+  [*] --> Player2FirstPick : / pick 5 random cards
+  Player2FirstPick --> Player2Picked : Mulligan / pick 5 random cards
+  Player2FirstPick --> Player2Picked : Accept
+}
+state CardsPicked <<join>>
+Player1Picked --> CardsPicked
+Player2Picked --> CardsPicked
+CardsPicked --> Playing
+
+Playing --> [*] : [one player's life <= 0]
+
+@enduml

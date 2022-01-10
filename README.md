@@ -2,6 +2,8 @@ This is a digital version of the card game Superjack, a game similar to Magic: T
 
 Find out more about Superjack on [the official website](https://www.superjackthegame.com/) or [repository](https://github.com/superjackthegame/sjthegame).
 
+See also my [formalization of the game's rules as a UML state chart](formal-rules/).
+
 Goal
 ====
 

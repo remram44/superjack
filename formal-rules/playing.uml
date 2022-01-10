@@ -1,0 +1,24 @@
+@startuml
+
+state Turn {
+  [*] --> Main : / draw card\n/ gems and creatures untap, pairs unequip
+  Main --> Main : [once per turn] play gem
+  Main -left-> Main : play creature
+  Main : instant actions
+  Main --> Attack
+  Attack --> Attack : declare attacker
+  Attack --> Defend : [>1 attackers]
+  Attack --> SecondMain : [no attackers]
+  Defend --> Defend : declare blockers
+  Defend --> AttackInstant
+  AttackInstant : instant actions
+  AttackInstant --> DefendInstant
+  DefendInstant : OPPONENT instant actions
+  DefendInstant --> SecondMain : / deal damage
+  SecondMain : instant actions
+  SecondMain --> FinalInstant : pass
+  FinalInstant : OPPONENT instant actions
+  FinalInstant --> Turn : / other player
+}
+
+@enduml

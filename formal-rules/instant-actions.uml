@@ -1,0 +1,22 @@
+@startuml
+
+state "instant actions" as InstantAction {
+  [*] --> act
+  state act {
+    state "priority" as act_priorityO <<exitpoint>>
+    state "response" as act_responseO <<exitpoint>>
+  }
+  act : Instant
+  state respond {
+    state "priority" as respond_priorityO <<exitpoint>>
+    state "response" as respond_responseO <<exitpoint>>
+  }
+  act_responseO --> respond
+  respond_responseO -left-> act
+  respond_priorityO --> act
+  respond: OPPONENT Instant
+  state "pass" as passO <<exitpoint>>
+  act_priorityO --> passO
+}
+
+@enduml
