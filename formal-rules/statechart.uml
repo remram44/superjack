@@ -1,0 +1,80 @@
+@startuml
+
+state PickCards <<fork>>
+[*] --> PickCards
+PickCards --> Player1Pick
+state Player1Pick as "Player 1 pick cards" {
+  state "not Mulligan'd" as Player1FirstPick
+  state "ready" as Player1Picked
+  [*] --> Player1FirstPick : / pick 5 random cards
+  Player1FirstPick --> Player1Picked : Mulligan / pick 5 random cards
+  Player1FirstPick --> Player1Picked : Accept
+}
+PickCards --> Player2Pick
+state Player2Pick as "Player 2 pick cards" {
+  state "not Mulligan'd" as Player2FirstPick
+  state "ready" as Player2Picked
+  [*] --> Player2FirstPick : / pick 5 random cards
+  Player2FirstPick --> Player2Picked : Mulligan / pick 5 random cards
+  Player2FirstPick --> Player2Picked : Accept
+}
+state CardsPicked <<join>>
+Player1Picked --> CardsPicked
+Player2Picked --> CardsPicked
+
+CardsPicked --> Turn
+
+state Turn {
+  [*] --> Main : / draw card\n/ gems and creatures untap, pairs unequip
+  Main --> Main : [once per turn] play gem
+  Main -left-> Main : play creature
+  Main : instant actions
+  Main --> Attack
+  Attack --> Attack : declare attacker
+  Attack --> Defend : [>1 attackers]
+  Attack --> SecondMain : [no attackers]
+  Defend --> Defend : declare blockers
+  Defend --> AttackInstant
+  AttackInstant : instant actions
+  AttackInstant --> DefendInstant
+  DefendInstant : OPPONENT instant actions
+  DefendInstant --> SecondMain : / deal damage
+  SecondMain : instant actions
+  SecondMain --> FinalInstant
+  FinalInstant : OPPONENT instant actions
+  FinalInstant --> Turn : pass / other player
+}
+
+state "instant actions" as InstantAction {
+  [*] --> act
+  state act {
+    state "priority" as act_priorityO <<exitpoint>>
+    state "response" as act_responseO <<exitpoint>>
+  }
+  act : Instant
+  state respond {
+    state "priority" as respond_priorityO <<exitpoint>>
+    state "response" as respond_responseO <<exitpoint>>
+  }
+  act_responseO --> respond
+  respond_responseO -left-> act
+  respond_priorityO --> act
+  respond: OPPONENT Instant
+  act_priorityO --> [*]
+}
+
+state Instant {
+  [*] --> priority
+  priority --> priorityO : pass
+  state "priority" as priorityO <<exitpoint>>
+  state response <<exitpoint>>
+  priority --> AceCreature : ace (creature)
+  AceCreature --> CounteredAceCreature : OPPONENT ace (counter)
+  AceCreature --> response
+  CounteredAceCreature --> AceCreature : ace (counter)
+  CounteredAceCreature --> priority
+  priority --> priority : gem sacrifice 4-7\nstraight\nequip\nstack\nroyal sacrifice
+  priority --> response : gem sacrifice 2 or 3
+}
+
+@enduml
