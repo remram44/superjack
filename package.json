@@ -1,0 +1,17 @@
+{
+  "name": "superjack-workspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Remi Rampin <remi@rampin.org>",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "scripts": {
+    "serve": "node ./packages/server/dist/index.js"
+  }
+}

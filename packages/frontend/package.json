@@ -1,0 +1,16 @@
+{
+  "name": "superjack-frontend",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Remi Rampin <remi@rampin.org>",
+  "license": "AGPL-3.0-or-later",
+  "private": true,
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0"
+  }
+}
