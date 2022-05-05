@@ -1,4 +1,4 @@
-import { build } from 'esbuild';
+import {build} from 'esbuild';
 
 /**
  * Generic options passed during build.
@@ -11,7 +11,7 @@ interface BuildOptions {
  * A builder function for the frontend package.
  */
 export async function buildFrontend(options: BuildOptions) {
-  const { env } = options;
+  const {env} = options;
 
   await build({
     entryPoints: ['packages/frontend/src/index.tsx'], // We read the React application from this entrypoint
@@ -29,7 +29,7 @@ export async function buildFrontend(options: BuildOptions) {
  * A builder function for the server package.
  */
 export async function buildServer(options: BuildOptions) {
-  const { env } = options;
+  const {env} = options;
 
   await build({
     entryPoints: ['packages/server/src/index.ts'],

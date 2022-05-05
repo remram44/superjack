@@ -1,4 +1,4 @@
-import { Game } from 'superjack';
+import {Game} from 'superjack';
 import * as React from 'react';
 
 interface GameComponent {
@@ -10,7 +10,10 @@ interface GameState {
   value: string;
 }
 
-class LocalGame extends React.PureComponent<{}, GameState> implements GameComponent {
+class LocalGame
+  extends React.PureComponent<{}, GameState>
+  implements GameComponent
+{
   game: Game;
 
   constructor(props: {}) {
@@ -29,22 +32,35 @@ class LocalGame extends React.PureComponent<{}, GameState> implements GameCompon
       <div className="game game-local">
         <p>Num: {this.state.num}</p>
         <p>
-          <input value={this.state.value} onChange={(evt) => this.setState({value: evt.target.value})} />
-          <input type="button" onClick={() => { this.increment(parseInt(this.state.value, 10)); this.setState({value: ''}); }} value="Increment" />
+          <input
+            value={this.state.value}
+            onChange={evt => this.setState({value: evt.target.value})}
+          />
+          <input
+            type="button"
+            onClick={() => {
+              this.increment(parseInt(this.state.value, 10));
+              this.setState({value: ''});
+            }}
+            value="Increment"
+          />
         </p>
       </div>
     );
   }
 }
 
-class NetworkGame extends React.PureComponent<{}, GameState> implements GameComponent {
+class NetworkGame
+  extends React.PureComponent<{}, GameState>
+  implements GameComponent
+{
   constructor(props: {}) {
     super(props);
     this.state = {num: 0, value: ''};
 
     (async () => {
       const response = await fetch('/api');
-      if(response.status === 200) {
+      if (response.status === 200) {
         const obj = await response.json();
         this.setState({num: obj.num});
       }
@@ -52,17 +68,14 @@ class NetworkGame extends React.PureComponent<{}, GameState> implements GameComp
   }
 
   async increment(num: number) {
-    const response = await fetch(
-      '/api',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        body: JSON.stringify({type: 'increment', num: num}),
+    const response = await fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
       },
-    );
-    if(response.status !== 200) {
+      body: JSON.stringify({type: 'increment', num: num}),
+    });
+    if (response.status !== 200) {
       throw new Error('Status ' + response.status);
     }
     const obj = await response.json();
@@ -74,8 +87,18 @@ class NetworkGame extends React.PureComponent<{}, GameState> implements GameComp
       <div className="game game-network">
         <p>Num: {this.state.num}</p>
         <p>
-          <input value={this.state.value} onChange={(evt) => this.setState({value: evt.target.value})} />
-          <input type="button" onClick={() => { this.increment(parseInt(this.state.value, 10)); this.setState({value: ''}); }} value="Increment" />
+          <input
+            value={this.state.value}
+            onChange={evt => this.setState({value: evt.target.value})}
+          />
+          <input
+            type="button"
+            onClick={() => {
+              this.increment(parseInt(this.state.value, 10));
+              this.setState({value: ''});
+            }}
+            value="Increment"
+          />
         </p>
       </div>
     );
@@ -83,8 +106,6 @@ class NetworkGame extends React.PureComponent<{}, GameState> implements GameComp
 }
 
 export function App(): React.ReactElement {
-  const [count, setCount] = React.useState(0);
-
   return (
     <div>
       <h1>Local game</h1>

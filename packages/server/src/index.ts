@@ -1,7 +1,7 @@
-import { Game } from 'superjack';
+import {Game} from 'superjack';
 import cors from 'cors';
 import express from 'express';
-import { join } from 'path';
+import {join} from 'path';
 
 const PORT = 3000;
 
@@ -20,11 +20,11 @@ app.get('/', (req: any, res: any) => {
 // API
 const game = new Game();
 app.get('/api', (req: any, res: any) => {
-  res.status(200).json({'num': game.num});
+  res.status(200).json({num: game.num});
 });
-app.post('/api', (req: any, res:any) => {
+app.post('/api', (req: any, res: any) => {
   game.increment(req.body.num);
-  res.status(200).json({'num': game.num});
+  res.status(200).json({num: game.num});
 });
 
 app.listen(PORT, () => {
