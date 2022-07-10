@@ -1,12 +1,121 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>my-app</title>
-    <meta name="description" content="Welcome on my application!" />
+    <title>Superjack</title>
+    <meta name="description" content="Superjack, open source &quot;collectible card game&quot; played with regular cards" />
+    <style>
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#game {
+  font-size: 18px;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.card {
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid #666666;
+  border-radius: .3em;
+  padding: .25em;
+  background-color: #FFFFFF;
+  width: 5em;
+  height: 7em;
+  box-shadow: .2em .2em .3em #333333;
+}
+.card.card-captured {
+  border: 1px solid #FF0000;
+}
+.card-Spades {
+  color: #000000;
+}
+.card-Hearts {
+  color: #FF0000;
+}
+.card-Diamonds {
+  color: #FF0000;
+}
+.card-Clubs {
+  color: #000000;
+}
+.card .face-corner {
+}
+.card .suit-corner {
+  margin-top: -0.2em;
+}
+.card .suit-center {
+  position: absolute;
+  top: 1.2em;
+  left: 0.9em;
+  font-size: 200%;
+}
+.card-back {
+  overflow: hidden;
+  padding: 0;
+}
+.card-back img {
+  width: 100%;
+  height: 100%;
+}
+
+#enemy-hand {
+  border: 1px solid red;
+}
+#enemy-gems {
+  border: 1px solid blue;
+}
+#enemy-creatures {
+  border: 1px solid green;
+}
+#own-creatures {
+  border: 1px solid green;
+}
+#own-gems {
+  border: 1px solid blue;
+}
+#own-hand {
+  border: 1px solid red;
+}
+
+/* Taken from bootstrap */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+  border: 0;
+}
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="menu">
+      <p><button id="menu-single">Play a single-player game</button></p>
+      <form id="menu-join">
+        <p>Create or join a multiplayer game: <input type="text" id="menu-game-name" placeholder="Random game ID..." /> <input type="submit" value="Create or join a multiplayer room" /></p>
+      </form>
+    </div>
+    <div id="game" style="display: none;">
+      <div id="enemy-hand"></div>
+      <div id="enemy-gems"></div>
+      <div id="enemy-creatures"></div>
+      <div id="own-creatures"></div>
+      <div id="own-gems"></div>
+      <div id="own-hand"></div>
+    </div>
     <script src="script.js"></script>
   </body>
 </html>
