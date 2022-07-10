@@ -1,2 +1,19 @@
 node_modules
 dist
+packages/frontend/public/script.js
+
+# ViM
+.*.swp
+
+# Emacs
+\#*#
+
+# OS files
+.DS_Store
+desktop.ini
+
+# Archives
+*.tar
+*.tar.gz
+*.tar.bz2
+*.zip
