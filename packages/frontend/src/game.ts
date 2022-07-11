@@ -1,4 +1,13 @@
-import {Card, Game, PlayerKnownHand, BasePlayer, getSuitEmoji} from 'superjack';
+import {
+  Card,
+  Game,
+  Event,
+  PlayerKnownHand,
+  BasePlayer,
+  Action,
+  PlayGem,
+  getSuitEmoji,
+} from 'superjack';
 
 const ASPECT = 1.6;
 
@@ -6,7 +15,7 @@ function getCardSrText(card: Card) {
   return `${card.face} of ${card.suit}`;
 }
 
-function makeCardElement(card: Card): HTMLElement {
+function makeCardElement(ui: Ui, card: Card): HTMLElement {
   const element = document.createElement('div');
   element.setAttribute(
     'class',
@@ -25,6 +34,7 @@ function makeCardElement(card: Card): HTMLElement {
     '<div aria-hidden="true" class="suit-center">' +
     getSuitEmoji(card.suit) +
     '</div>';
+  element.addEventListener('click', () => ui.onCardClicked(card));
   return element;
 }
 
@@ -39,6 +49,12 @@ interface AnimatedCard {
   card: Card | undefined;
   element: HTMLElement;
   target: [number, number];
+}
+
+interface Playing {
+  game: Game;
+  us: PlayerKnownHand;
+  them: BasePlayer;
 }
 
 export class Ui {
@@ -68,9 +84,7 @@ export class Ui {
   ownGemsTop = 10;
   ownHandTop = 10;
 
-  game: Game | undefined;
-  us: PlayerKnownHand | undefined;
-  them: BasePlayer | undefined;
+  playing: Playing | undefined;
 
   fontSize = 10;
   cards: Map<String, AnimatedCard> = new Map();
@@ -92,9 +106,7 @@ export class Ui {
   }
 
   newGame(game: Game, us: PlayerKnownHand, them: BasePlayer) {
-    this.game = game;
-    this.us = us;
-    this.them = them;
+    this.playing = {game, us, them};
 
     // Delete previous cards
     document.querySelectorAll('.card').forEach(card => {
@@ -109,6 +121,15 @@ export class Ui {
     // Initialize UI
     this.root.style.display = '';
     this.resize();
+
+    // Our turn?
+    if (this.playing) {
+      if (this.playing.game.currentPlayer === this.playing.us.id) {
+        document.documentElement.classList.add('select-card');
+      } else {
+        document.documentElement.classList.remove('select-card');
+      }
+    }
   }
 
   resize() {
@@ -165,17 +186,17 @@ export class Ui {
     this.rootEnemyDeck.style.setProperty('height', 7 * this.fontSize + 'px');
     this.rootEnemyDeck.style.setProperty('width', 5 * this.fontSize + 'px');
 
-    // Our hand
-    if (this.us) {
-      this.rootOwnDeck.innerHTML = this.us.getCardsInDeck() + ' cards';
-      for (let i = 0; i < this.us.hand.length; ++i) {
-        const card = this.us.hand[i];
+    if (this.playing) {
+      // Our hand
+      this.rootOwnDeck.innerHTML = this.playing.us.getCardsInDeck() + ' cards';
+      for (let i = 0; i < this.playing.us.hand.length; ++i) {
+        const card = this.playing.us.hand[i];
         const key = card.key();
         let element;
         if (this.cards.has(key)) {
           element = this.cards.get(key)!.element;
         } else {
-          element = makeCardElement(card);
+          element = makeCardElement(this, card);
         }
         const targetX = (8 + 6 * i) * this.fontSize;
         const targetY =
@@ -185,12 +206,11 @@ export class Ui {
         this.rootOwnHand.appendChild(element);
         this.cards.set(key, {card, element, target: [targetX, targetY]});
       }
-    }
 
-    // Opponent's hand
-    if (this.them) {
-      this.rootEnemyDeck.innerHTML = this.them.getCardsInDeck() + ' cards';
-      for (let i = 0; i < this.them.getCardsInHand(); ++i) {
+      // Opponent's hand
+      this.rootEnemyDeck.innerHTML =
+        this.playing.them.getCardsInDeck() + ' cards';
+      for (let i = 0; i < this.playing.them.getCardsInHand(); ++i) {
         const key = 'H' + i;
         let element;
         if (this.cards.has(key)) {
@@ -210,6 +230,46 @@ export class Ui {
           target: [targetX, targetY],
         });
       }
+    }
+  }
+
+  play(action: Action) {
+    // TODO
+  }
+
+  onGameEvent(event: Event) {
+    if (!this.playing) {
+      return;
+    }
+
+    if (event.eventType === 'turn_start') {
+      if (event.player === this.playing.us.id) {
+        document.documentElement.classList.add('select-card');
+      }
+    } else if (event.eventType === 'play_gem') {
+      // TODO
+    } else if (event.eventType === 'draw_card') {
+      // TODO
+    } else {
+      console.error('Unknown event type ', event.eventType);
+    }
+  }
+
+  onCardClicked(card: Card) {
+    if (!this.playing) {
+      return;
+    }
+    console.log('Card clicked: ', card.toString());
+    if (
+      this.playing.game.currentPhase === 'play_gem' &&
+      this.playing.game.currentPlayer === this.playing.us.id
+    ) {
+      // Play a gem
+      const action: PlayGem = {
+        actionType: 'play_gem',
+        card: card,
+      };
+      this.play(action);
     }
   }
 }

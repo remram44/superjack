@@ -99,6 +99,7 @@ export interface BaseGame {
 export class Game implements BaseGame {
   players: [Player, Player];
   currentPlayer: 0 | 1;
+  currentPhase: 'play_gem' = 'play_gem';
 
   constructor() {
     const players = [];
@@ -119,4 +120,38 @@ export class Game implements BaseGame {
 
     this.currentPlayer = 0;
   }
+
+  play(player: 0 | 1, action: Action): Event[] {
+    const events: Event[] = [];
+    return events;
+  }
+}
+
+export interface Event {
+  eventType: string;
+  player: 0 | 1;
+}
+
+export interface CardDrawn extends Event {
+  eventType: 'draw_card';
+  card: Card | undefined;
+}
+
+export interface GemPlayed extends Event {
+  eventType: 'play_gem';
+  card: Card;
+}
+
+export interface TurnStarted extends Event {
+  eventType: 'turn_start';
+  player: 0 | 1;
+}
+
+export interface Action {
+  actionType: string;
+}
+
+export interface PlayGem extends Action {
+  actionType: 'play_gem';
+  card: Card;
 }
