@@ -66,6 +66,11 @@ html, body {
   height: 100%;
 }
 
+#enemy-deck {
+  position: absolute;
+  border: 5px solid black;
+  width: 100%;
+}
 #enemy-hand {
   border: 1px solid red;
 }
@@ -83,6 +88,11 @@ html, body {
 }
 #own-hand {
   border: 1px solid red;
+}
+#own-deck {
+  position: absolute;
+  border: 5px solid black;
+  width: 100%;
 }
 
 /* Taken from bootstrap */
@@ -109,12 +119,14 @@ html, body {
       </form>
     </div>
     <div id="game" style="display: none;">
+      <div id="enemy-deck"></div>
       <div id="enemy-hand"></div>
       <div id="enemy-gems"></div>
       <div id="enemy-creatures"></div>
       <div id="own-creatures"></div>
       <div id="own-gems"></div>
       <div id="own-hand"></div>
+      <div id="own-deck"></div>
     </div>
     <script src="script.js"></script>
   </body>

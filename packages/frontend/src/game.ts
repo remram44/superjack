@@ -35,44 +35,56 @@ function makeUnknownCardElement(): HTMLElement {
   return element;
 }
 
+interface AnimatedCard {
+  card: Card | undefined;
+  element: HTMLElement;
+  target: [number, number];
+}
+
 export class Ui {
   root: HTMLElement;
+
+  // Debug elements
+  rootEnemyDeck: HTMLElement;
   rootEnemyHand: HTMLElement;
   rootEnemyGems: HTMLElement;
   rootEnemyCreatures: HTMLElement;
   rootOwnCreatures: HTMLElement;
   rootOwnGems: HTMLElement;
   rootOwnHand: HTMLElement;
+  rootOwnDeck: HTMLElement;
 
-  enemyHandHeight: number;
-  ownHandHeight: number;
-  enemyGemsHeight: number;
-  enemyCreaturesHeight: number;
-  ownCreaturesHeight: number;
-  ownGemsHeight: number;
+  enemyHandHeight = 10;
+  ownHandHeight = 10;
+  enemyGemsHeight = 10;
+  enemyCreaturesHeight = 10;
+  ownCreaturesHeight = 10;
+  ownGemsHeight = 10;
 
-  enemyHandTop: number;
-  enemyGemsTop: number;
-  enemyCreaturesTop: number;
-  ownCreaturesTop: number;
-  ownGemsTop: number;
-  ownHandTop: number;
+  enemyHandTop = 10;
+  enemyGemsTop = 10;
+  enemyCreaturesTop = 10;
+  ownCreaturesTop = 10;
+  ownGemsTop = 10;
+  ownHandTop = 10;
 
   game: Game | undefined;
   us: PlayerKnownHand | undefined;
   them: BasePlayer | undefined;
 
   fontSize = 10;
-  cards: Map<String, {card: Card; element: HTMLElement}> = new Map();
+  cards: Map<String, AnimatedCard> = new Map();
 
   constructor(root: HTMLElement) {
     this.root = root;
+    this.rootEnemyDeck = document.getElementById('enemy-deck')!;
     this.rootEnemyHand = document.getElementById('enemy-hand')!;
     this.rootEnemyGems = document.getElementById('enemy-gems')!;
     this.rootEnemyCreatures = document.getElementById('enemy-creatures')!;
     this.rootOwnCreatures = document.getElementById('own-creatures')!;
     this.rootOwnGems = document.getElementById('own-gems')!;
     this.rootOwnHand = document.getElementById('own-hand')!;
+    this.rootOwnDeck = document.getElementById('own-deck')!;
 
     this.resize = this.resize.bind(this);
     window.addEventListener('resize', this.resize);
@@ -83,34 +95,14 @@ export class Ui {
     this.game = game;
     this.us = us;
     this.them = them;
-    this.show();
 
     // Delete previous cards
-    document.querySelectorAll('.card').forEach((card: HTMLElement) => {
+    document.querySelectorAll('.card').forEach(card => {
       card.remove();
     });
-
-    // Create cards
     this.cards = new Map();
-    const cardHeight = 7 * this.fontSize;
 
-    // Our hand
-    if (this.us) {
-      for (let i = 0; i < this.us.hand.length; ++i) {
-        const card = this.us.hand[i];
-        const key = card.key();
-        const element = makeCardElement(card, this.us.id);
-        element.style.setProperty('left', '' + (2 + 6 * i) + 'em');
-        element.style.setProperty(
-          'top',
-          '' +
-            (this.ownHandTop + (this.ownHandHeight - cardHeight) * 0.5) +
-            'px'
-        );
-        this.rootOwnHand.appendChild(element);
-        this.cards.set(key, {card, element});
-      }
-    }
+    this.show();
   }
 
   show() {
@@ -143,8 +135,8 @@ export class Ui {
     // This is just for debugging
     let currentTop = 0;
     function position(elem: HTMLElement, height: number) {
-      elem.style['height'] = '' + height + 'px';
-      elem.style['top'] = '' + currentTop + 'px';
+      elem.style.setProperty('height', height + 'px');
+      elem.style.setProperty('top', currentTop + 'px');
       currentTop += height;
     }
     position(this.rootEnemyHand, this.enemyHandHeight);
@@ -153,5 +145,71 @@ export class Ui {
     position(this.rootOwnCreatures, this.ownCreaturesHeight);
     position(this.rootOwnGems, this.ownGemsHeight);
     position(this.rootOwnHand, this.ownHandHeight);
+
+    // Position cards
+    const cardHeight = 7 * this.fontSize;
+
+    // Show decks
+    this.rootOwnDeck.style.setProperty(
+      'top',
+      this.ownHandTop + (this.ownHandHeight - cardHeight) * 0.5 + 'px'
+    );
+    this.rootOwnDeck.style.setProperty('left', this.fontSize + 'px');
+    this.rootOwnDeck.style.setProperty('height', 7 * this.fontSize + 'px');
+    this.rootOwnDeck.style.setProperty('width', 5 * this.fontSize + 'px');
+    this.rootEnemyDeck.style.setProperty(
+      'top',
+      this.enemyHandTop + (this.enemyHandHeight - cardHeight) * 0.5 + 'px'
+    );
+    this.rootEnemyDeck.style.setProperty('left', this.fontSize + 'px');
+    this.rootEnemyDeck.style.setProperty('height', 7 * this.fontSize + 'px');
+    this.rootEnemyDeck.style.setProperty('width', 5 * this.fontSize + 'px');
+
+    // Our hand
+    if (this.us) {
+      this.rootOwnDeck.innerHTML = this.us.getCardsInDeck() + ' cards';
+      for (let i = 0; i < this.us.hand.length; ++i) {
+        const card = this.us.hand[i];
+        const key = card.key();
+        let element;
+        if (this.cards.has(key)) {
+          element = this.cards.get(key)!.element;
+        } else {
+          element = makeCardElement(card);
+        }
+        const targetX = (8 + 6 * i) * this.fontSize;
+        const targetY =
+          this.ownHandTop + (this.ownHandHeight - cardHeight) * 0.5;
+        element.style.setProperty('left', targetX + 'px');
+        element.style.setProperty('top', targetY + 'px');
+        this.rootOwnHand.appendChild(element);
+        this.cards.set(key, {card, element, target: [targetX, targetY]});
+      }
+    }
+
+    // Opponent's hand
+    if (this.them) {
+      this.rootEnemyDeck.innerHTML = this.them.getCardsInDeck() + ' cards';
+      for (let i = 0; i < this.them.getCardsInHand(); ++i) {
+        const key = 'H' + i;
+        let element;
+        if (this.cards.has(key)) {
+          element = this.cards.get(key)!.element;
+        } else {
+          element = makeUnknownCardElement();
+        }
+        const targetX = (8 + 6 * i) * this.fontSize;
+        const targetY =
+          this.enemyHandTop + (this.enemyHandHeight - cardHeight) * 0.5;
+        element.style.setProperty('left', targetX + 'px');
+        element.style.setProperty('top', targetY + 'px');
+        this.rootEnemyHand.appendChild(element);
+        this.cards.set(key, {
+          card: undefined,
+          element,
+          target: [targetX, targetY],
+        });
+      }
+    }
   }
 }
