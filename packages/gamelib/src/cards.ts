@@ -51,7 +51,7 @@ export class Card {
   }
 
   toString() {
-    return `${this.suit} ${this.face}`;
+    return this.face + getSuitEmoji(this.suit);
   }
 
   key() {
